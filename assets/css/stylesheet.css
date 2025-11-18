@@ -1,0 +1,326 @@
+body {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+  font-family: 'Inter', sans-serif;
+  background-color: #f8f9fa;
+}
+
+#login-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 1;
+  width: 100%;
+  background-color: #e9ecef;
+}
+
+.login-card {
+  border-radius: 1rem;
+  overflow: hidden;
+}
+
+.login-branding-col {
+  background: linear-gradient(135deg, #6f42c1, #0d6efd);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.form-floating > .form-control {
+    height: calc(3.5rem + 2px);
+    line-height: 1.25;
+}
+
+.form-floating > label {
+    padding: 1rem .75rem;
+}
+
+.form-floating .form-control:focus ~ label {
+    color: #0d6efd;
+}
+
+.form-floating i {
+    opacity: 0.6;
+}
+
+.btn-lg {
+    padding: 0.75rem 1rem;
+}
+/* --- FIM TELA DE LOGIN --- */
+
+/* --- ESTRUTURA PRINCIPAL --- */
+.main-wrapper {
+  display: flex;
+  flex-grow: 1;
+  overflow: hidden;
+}
+
+.sidebar {
+  width: 280px;
+  min-width: 280px;
+  background: linear-gradient(135deg, #6f42c1, #0d6efd);
+  color: white;
+  padding: 1.5rem 1rem;
+  display: flex;
+  flex-direction: column;
+  transition: width 0.3s ease-in-out, min-width 0.3s ease-in-out;
+  position: relative;
+}
+
+/* --- SIDEBAR RECOLHÍVEL --- */
+.sidebar-collapse-btn {
+  position: absolute;
+  top: 20px;
+  right: -15px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: #fff;
+  color: #0d6efd;
+  border: 1px solid #dee2e6;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 1100;
+  transition: transform 0.3s ease-in-out;
+}
+
+.sidebar.collapsed .sidebar-collapse-btn {
+  transform: rotate(180deg);
+}
+
+.sidebar.collapsed {
+  width: 90px;
+  min-width: 90px;
+  align-items: center;
+}
+
+.sidebar .nav-link-text, .sidebar .logo-container .fs-4, .sidebar hr {
+  transition: opacity 0.2s, visibility 0.2s;
+  white-space: nowrap;
+}
+
+.sidebar.collapsed .nav-link-text, .sidebar.collapsed .logo-container .fs-4, .sidebar.collapsed hr {
+  opacity: 0;
+  visibility: hidden;
+  width: 0;
+}
+
+.sidebar.collapsed .logo-container {
+  border-bottom: none;
+  justify-content: center;
+}
+
+.sidebar .nav-link {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.sidebar.collapsed .nav-link {
+  justify-content: center;
+}
+
+.sidebar .nav-link .nav-link-text {
+  margin-left: 0.75rem;
+}
+
+@media (max-width: 991.98px) {
+  .sidebar-collapse-btn {
+    display: none;
+  }
+}
+/* --- FIM SIDEBAR RECOLHÍVEL --- */
+
+.sidebar .nav-link {
+  color: rgba(255, 255, 255, 0.8);
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  margin-bottom: 0.5rem;
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+.sidebar .nav-link:hover,
+.sidebar .nav-link.active {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+.sidebar .logo-container {
+  display: flex;
+  align-items: center;
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  width: 100%;
+}
+
+.sidebar .logo-container img {
+  filter: brightness(0) invert(1);
+}
+
+.sidebar .logo-container .fs-4 {
+  margin-left: 0.5rem;
+  color: white;
+}
+
+.content-area {
+  flex-grow: 1;
+  padding: 2rem;
+  background-color: #ffffff;
+  overflow-y: auto;
+}
+
+.footer {
+  background-color: #e9ecef;
+  padding: 1rem;
+  text-align: center;
+  font-size: 0.9rem;
+  border-top: 1px solid #dee2e6;
+}
+
+/* --- COMPONENTES --- */
+#loadingSpinnerContainer {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 1060;
+  flex-direction: column; justify-content: center; align-items: center;
+}
+
+.view { display: none; }
+.view.active { display: block; animation: fadeIn 0.5s; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.card {
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  border: none;
+}
+
+.modal-header, .modal-footer { border-color: #e9ecef; }
+
+/* --- SIDEBAR RESPONSIVA (MOBILE) --- */
+.sidebar-toggler {
+  position: fixed;
+  top: 1rem; left: 1rem; z-index: 1031;
+  display: none;
+  background-color: #0d6efd; color: white;
+  border: none; border-radius: 0.375rem;
+  padding: 0.5rem 0.75rem;
+}
+
+.sidebar-overlay {
+  display: none; position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1029;
+}
+
+@media (max-width: 991.98px) {
+  .sidebar-toggler { display: block; }
+  .sidebar { position: fixed; height: 100%; z-index: 1030; margin-left: -280px; }
+  .sidebar.show { margin-left: 0; }
+  .sidebar.show + .sidebar-overlay { display: block; }
+}
+
+/* --- Estilos para Modais de Ajuda/Sobre --- */
+.accordion-button:not(.collapsed) {
+  color: #fff;
+  background-color: #0d6efd;
+}
+.accordion-button:focus {
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+/* 1. Define as variáveis para o tema claro (padrão) */
+body {
+  --body-bg: #f8f9fa;
+  --text-color: #212529;
+  --card-bg: #ffffff;
+  --card-header-bg: #f8f9fa;
+  --modal-bg: #ffffff;
+  --input-bg: #ffffff;
+  --input-border: #dee2e6;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* 2. Sobrescreve as variáveis quando o tema escuro está ativo */
+body[data-theme="dark"] {
+  --body-bg: #121212;
+  --text-color: #e0e0e0;
+  --card-bg: #1e1e1e;
+  --card-header-bg: #2a2a2a;
+  --modal-bg: #2a2a2a;
+  --input-bg: #2a2a2a;
+  --input-border: #444444;
+  color-scheme: dark;
+}
+
+/* 3. Aplica as variáveis aos elementos da UI */
+body, .content-area {
+  background-color: var(--body-bg);
+  color: var(--text-color);
+}
+
+.card, .modal-content {
+  background-color: var(--card-bg);
+  color: var(--text-color);
+}
+
+.card-header, .modal-header, .modal-footer {
+  background-color: var(--card-header-bg);
+  border-color: var(--input-border);
+}
+
+.form-control, .form-select {
+  background-color: var(--input-bg);
+  color: var(--text-color);
+  border-color: var(--input-border);
+}
+
+.form-control:focus, .form-select:focus {
+  background-color: var(--input-bg);
+  color: var(--text-color);
+  border-color: #0d6efd;
+}
+
+.list-group-item {
+    background-color: var(--card-bg);
+    border-color: var(--input-border);
+}
+
+/* --- FIM DA LÓGICA DE TEMA --- */
+/* --- Aprimoramentos do Dashboard --- */
+#statSubjectList {
+  /* Define uma altura máxima para a lista de disciplinas para evitar que ela quebre o layout. */
+  /* Este valor pode ser ajustado para se alinhar melhor com a altura da tabela de questões. */
+  max-height: 400px;
+  /* Adiciona uma barra de rolagem vertical apenas quando o conteúdo exceder a altura máxima. */
+  overflow-y: auto;
+}
+
+/* Estilização opcional da barra de rolagem para um visual mais limpo (funciona em Chrome/Safari/Edge) */
+#statSubjectList::-webkit-scrollbar {
+  width: 8px;
+}
+
+#statSubjectList::-webkit-scrollbar-track {
+  background: var(--card-header-bg);
+  border-radius: 10px;
+}
+
+#statSubjectList::-webkit-scrollbar-thumb {
+  background-color: #888;
+  border-radius: 10px;
+  border: 2px solid var(--card-header-bg);
+}
+
+#statSubjectList::-webkit-scrollbar-thumb:hover {
+  background-color: #555;
+}
