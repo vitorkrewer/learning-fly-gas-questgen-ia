@@ -1,56 +1,55 @@
-# Visão Geral e Funcionalidades
-O QuestGen IA é uma ferramenta de produtividade educacional que visa reduzir drasticamente o tempo e o esforço necessários para criar avaliações de alta qualidade. A aplicação serve como uma ponte entre o conteúdo de estudo bruto e um banco de questões estruturado e pronto para uso em plataformas de e-learning.
+﻿# Visão Geral e Funcionalidades
+
+O **QuestGen IA** é uma ferramenta de produtividade educacional criada para acelerar e qualificar o processo de elaboração de avaliações e bancos de questões. Integrado ao ecossistema Google Workspace e potencializado pelo Google Gemini, o sistema transforma materiais didáticos brutos em questões formatadas, comentadas e prontas para uso em ambientes virtuais de aprendizagem.
+
+---
 
 ## Público-Alvo
-**Educadores e Professores:** Para criar rapidamente avaliações para suas turmas.
 
-**Designers Instrucionais:** Para desenvolver materiais de e-learning e bancos de questões para cursos online.
+* **Educadores e Professores:** Criam rapidamente provas, listas de exercícios e simulados aderentes aos seus planos de aula.
+* **Designers Instrucionais & Conteudistas:** Produzem com velocidade e consistência bancos de questões para cursos EaD e treinamentos corporativos.
+* **Instituições de Ensino:** Padronizam a qualidade pedagógica de suas avaliações em escala com custo zero de infraestrutura.
 
-**Instituições de Ensino:** Para padronizar e escalar a produção de conteúdo avaliativo.
+---
 
 ## Lista de Funcionalidades
+
 ### 1. Autenticação e Segurança
-**Login por Usuário e Chave:** Acesso à aplicação controlado por credenciais individuais.
+* **Login por Usuário e Chave:** Acesso controlado por credenciais individuais armazenadas em `USER_KEYS`.
+* **Sessão por Token:** Tokens de sessão temporários validados a cada requisição de servidor.
+* **Escopos OAuth Mínimos:** Permissões restritas estritamente ao Google Drive, Google Sheets, Google Docs e chamadas externas, sem acesso a dados pessoais ou e-mails.
 
-**Sessão por Token:** Utilização de tokens de sessão temporários (CacheService) para autenticar as requisições, garantindo que apenas usuários logados possam realizar ações.
+### 2. Geração Inteligente com Google Gemini (Módulo Centralizado)
+* **Suporte Multimodal a Documentos e PDFs:** Capacidade de processar nativamente:
+  * Arquivos **Google Docs** vinculados ao Drive.
+  * Arquivos **PDF** completos no Google Drive (enviados em base64 via `inlineData`).
+  * Arquivos de texto puro (.txt, .md) e apresentações Google Slides (convertidas automaticamente).
+* **Cadeia de Fallback Automática entre Modelos:**
+  1. `gemini-3.8-flash` (alta velocidade)
+  2. `gemini-3.5-flash` (eficiência e latência reduzida)
+  3. `gemini-2.5-pro` (raciocínio complexo para itens avançados)
+  4. `gemini-2.5-flash` (estabilidade)
+  5. `gemini-1.5-flash` (disponibilidade contínua de segurança)
+* **Structured Outputs (Geração em JSON Nativo):** Utiliza `responseSchema` obrigatório na API do Gemini. As questões chegam estruturadas diretamente em formato de objeto, eliminando falhas de regex e perda de dados.
+* **Diretrizes Pedagógicas Avançadas:** Instruções embutidas para avaliação de níveis cognitivos superiores (análise, interpretação, julgamento), distratores plausíveis e comentários formativos detalhados.
 
-### 2. Geração de Conteúdo com IA
-**Motor Gemini do Google:** Integração direta com a API do Gemini para processamento de linguagem natural e geração de conteúdo.
+### 3. Gestão Descentralizada de Bancos de Dados
+* **Arquitetura Multi-Banco:** Permite criar múltiplos bancos isolados (ex: por disciplina, semestre ou curso), cada um armazenado em uma Planilha Google dedicada.
+* **Planilha Mestra de Configuração:** Centraliza o catálogo de bancos e vinculações com pastas do Drive.
+* **Bloqueio Concorrente (`LockService`):** Gravações e exclusões concorrentes utilizam bloqueio transacional do Google para prevenir corrupção ou inconsistência de dados.
 
-**Base em Google Docs:** Capacidade de ler o conteúdo de qualquer Documento Google fornecido como material base.
+### 4. Interface do Usuário (UI/UX)
+* **Single Page Application (SPA):** Navegação fluida sem recarregamento de página.
+* **Dashboard em Tempo Real:** Totalizadores de questões, disciplinas cadastradas e histórico de itens.
+* **Seletor de Tema Dinâmico:** Alternância instantânea entre modo Claro (*Light*) e Escuro (*Dark*) com persistência no `localStorage`.
+* **Design Responsivo:** Adaptável a telas de desktop, tablets e smartphones (Bootstrap 5).
 
-**Prompt de Engenharia:** Um prompt robusto e detalhado que instrui a IA a criar questões complexas, com alternativas plausíveis e comentários pedagógicos.
+### 5. Administração e Curadoria de Questões
+* **Exploração por Disciplina:** Listagem e filtragem de questões por disciplina.
+* **Edição em Modal:** Correção rápida de enunciados, opções (A a E), gabarito e comentários explicativos.
+* **Exclusão Segura e Limpeza Geral:** Exclusão individual com confirmação ou purga completa dos dados de um banco mantendo sua estrutura.
 
-### 3. Gerenciamento de Bancos de Dados
-**Sistema Multi-Banco:** O usuário pode criar e gerenciar múltiplos bancos de questões, cada um contido em sua própria Planilha Google.
-
-**Configuração Centralizada:** Uma única Planilha Google (QuestGen AI - Configurações) gerencia o acesso a todos os outros bancos.
-
-**Criação e Seleção Dinâmica:** A interface permite criar novos bancos e alternar entre os existentes de forma fluida.
-
-### 4. Interface do Usuário (UI) e Experiência (UX)
-**Dashboard Informativo:** Uma tela inicial que exibe estatísticas em tempo real sobre o banco de questões selecionado.
-
-**Design Responsivo:** A interface se adapta a diferentes tamanhos de tela (desktop, tablet, mobile) graças ao Bootstrap 5.
-
-**Sidebar Recolhível:** O menu lateral pode ser expandido ou recolhido para otimizar o espaço de tela.
-
-**Feedback Visual:** Indicadores de carregamento (spinner) e alertas dinâmicos informam o usuário sobre o status das operações.
-
-**Modais Interativos:** Todas as funcionalidades (configurações, exportação, ajuda) são acessadas através de modais, mantendo a interface limpa.
-
-### 5. Administração de Questões
-- **Visualização por Disciplina:** Capacidade de listar todas as questões pertencentes a uma disciplina específica.
-
-- **Edição em Linha:** O usuário pode clicar em um botão "Editar" para abrir um modal e corrigir ou aprimorar o enunciado, as alternativas ou o gabarito de uma questão.
-
-- **Exclusão Segura:** As questões podem ser excluídas individualmente, com uma confirmação para evitar ações acidentais.
-
-- **Limpeza de Dados:** Opção para apagar todas as questões de um banco de dados, mantendo a estrutura da planilha.
-
-### 6. Exportação de Dados
-- **Moodle GIFT:** Exporta as questões no formato de texto simples GIFT, ideal para importação rápida no Moodle.
-
-- **Moodle XML:** Gera um arquivo XML estruturado, compatível com o sistema de importação do Moodle, que preserva mais detalhes de formatação.
-
-- **Google Docs:** Exporta as questões formatadas para um Documento Google, ideal para impressão ou revisão manual.
+### 6. Exportação Flexível para Plataformas EaD
+* **Moodle GIFT:** Formato texto leve com escape de caracteres reservados, gabarito e feedbacks integrados.
+* **Moodle XML:** Padrão com blocos CDATA para importação direta no Banco de Questões do Moodle.
+* **Google Docs:** Geração direta de documento formatado com cabeçalhos, enumerações e gabaritos, ideal para revisão colaborativa ou impressão.

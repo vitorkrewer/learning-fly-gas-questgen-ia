@@ -1,5 +1,5 @@
-<p align="center">
-  <img src="https://learningfly.b-cdn.net/images/logo-learning-fly-full.png" alt="Logo do LearningFly" width="200">
+﻿<p align="center">
+  <img src="docs/images/learningfly-icon.png" alt="Logo do LearningFly" width="200">
 </p>
 
 ![Google Apps Script](https://img.shields.io/badge/Google%20Apps%20Script-4285F4?style=flat-square&logo=google&logoColor=white)
@@ -17,35 +17,36 @@ LearningFly é uma série de ferramentas desenvolvidas para otimizar processos e
 ![Status do Projeto](https://img.shields.io/badge/Status-Ativo-brightgreen)
 
 
-## ✈️ Sobre o Projeto
+## 🚀 Sobre o Projeto
 
-LearningFly é uma aplicação web desenvolvida com Google Apps Script, criada para auxiliar na gestão inteligente de cursos, materiais didáticos e fluxos educacionais. A ferramenta integra-se ao Google Workspace (Drive, Planilhas, Documentos) para tornar processos pedagógicos mais organizados, eficientes e automatizados, unindo tecnologia, design instrucional e pensamento sistêmico para resolver desafios reais na educação digital.
+O **LearningFly** é uma aplicação web desenvolvida com Google Apps Script, criada para auxiliar na gestão inteligente de cursos, materiais didáticos e fluxos educacionais. A ferramenta integra-se ao Google Workspace (Drive, Planilhas, Documentos) para tornar processos pedagógicos mais organizados, eficientes e automatizados, unindo tecnologia, design instrucional e pensamento sistêmico para resolver desafios reais na educação digital.
 
 ## QuestGen IA
 
-O QuestGen IA, projeto integrante do LearningFly, é uma ferramenta poderosa desenvolvida para educadores, designers instrucionais e instituições de ensino que buscam otimizar a criação de avaliações e bancos de questões. Utilizando a inteligência artificial do Google Gemini, o QuestGen IA transforma conteúdo de estudo em questões de múltipla escolha de alta qualidade, com alternativas plausíveis e comentários pedagógicos, tudo isso integrado ao ecossistema Google Workspace.
+O **QuestGen IA**, projeto integrante do LearningFly, é uma ferramenta poderosa desenvolvida para educadores, designers instrucionais e instituições de ensino que buscam otimizar a criação de avaliações e bancos de questões. Utilizando a inteligência artificial do Google Gemini, o QuestGen IA transforma conteúdo de estudo em questões de múltipla escolha de alta qualidade, com alternativas plausíveis e comentários pedagógicos, tudo isso integrado ao ecossistema Google Workspace.
 
 <p align="center">
-  <img src="/docs/images/login-screen.png" alt="Screenshot kanbanAgil" width="800">
+  <img src="/docs/images/login-screen.png" alt="Screenshot Login" width="800">
 </p>
 
 
 ## Funcionalidades Principais
 
-*   **Geração de Questões com IA:** Alimentado pelo Google Gemini, o QuestGen IA lê documentos Google Docs e gera questões complexas e contextualizadas.
-*   **Gerenciamento de Bancos de Dados:** Crie e gerencie múltiplos bancos de questões, cada um armazenado em uma Planilha Google separada, facilitando a organização por disciplina, curso ou projeto.
+*   **Geração Multimodal com IA:** Alimentado pelo Google Gemini (com fallback automático de modelos e suporte a Structured Outputs JSON), o QuestGen IA lê tanto **Google Docs** quanto arquivos **PDF** no Drive e gera questões complexas e contextualizadas.
+*   **Cadeia Inteligente de Fallback de Modelos:** Alterna automaticamente entre modelos de última geração e alta estabilidade (`gemini-3.8-flash` ➔ `gemini-3.5-flash` ➔ `gemini-2.5-pro` ➔ `gemini-2.5-flash` ➔ `gemini-1.5-flash`) garantindo alta disponibilidade.
+*   **Gerenciamento de Bancos de Dados:** Crie e gerencie múltiplos bancos de questões, cada um armazenado em uma Planilha Google separada com controle de concorrência (`LockService`).
 *   **Autenticação Segura:** Acesso controlado por usuário e chave, com sessões baseadas em tokens para garantir a segurança dos dados.
-*   **Interface Intuitiva:** Um dashboard informativo, design responsivo e modais interativos proporcionam uma experiência de usuário fluida e eficiente.
+*   **Interface Intuitiva & SPA:** Dashboard informativo, suporte a temas Claro/Escuro (*Dark/Light mode*), design responsivo e modais interativos.
 *   **Administração de Questões:** Visualize, edite, exclua e organize questões por disciplina diretamente na interface.
-*   **Exportação Flexível:** Exporte suas questões para diversos formatos, incluindo Moodle GIFT, Moodle XML e Google Docs, para integração fácil com outras plataformas ou para revisão offline.
-*   **Configuração Simplificada:** Implante o aplicativo web em sua própria conta Google Apps Script e configure-o em poucos passos.
+*   **Exportação Flexível:** Exporte suas questões para diversos formatos: **Moodle GIFT**, **Moodle XML** e **Google Docs**, para integração direta com AVAs ou revisão offline.
+*   **Configuração Simplificada:** Implante o aplicativo web diretamente no editor do Google Apps Script em sua conta Google, sem dependência de CLASP ou servidores externos.
 
 <p align="center">
-  <img src="/docs/images/generate-questions-screen.png" alt="Screenshot kanbanAgil" width="800">
+  <img src="/docs/images/generate-questions-screen.png" alt="Screenshot Gerador" width="800">
 </p>
 
 
-## Para Quem é o QuestGen IA?
+## Para Quem É o QuestGen IA?
 
 *   **Educadores e Professores:** Reduza o tempo gasto na criação de provas e exercícios.
 *   **Designers Instrucionais:** Desenvolva rapidamente materiais avaliativos para cursos online.
@@ -69,7 +70,7 @@ Explore a documentação completa para entender a arquitetura, funcionalidades e
 
 ## Contribuição
 
-Este projeto é aceita contribuições. Se você tiver ideias para novas funcionalidades, melhorias ou encontrar algum bug, sinta-se à vontade para abrir uma *issue*.
+Este projeto aceita contribuições. Se você tiver ideias para novas funcionalidades, melhorias ou encontrar algum bug, sinta-se à vontade para abrir uma *issue*.
 
 
 ## 📄 Licença

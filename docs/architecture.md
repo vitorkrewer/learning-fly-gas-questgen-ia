@@ -1,70 +1,93 @@
-# Arquitetura do Sistema
-O QuestGen IA foi projetado com uma arquitetura cliente-servidor, inteiramente contida no ecossistema do Google Apps Script. Isso permite que ele funcione como um aplicativo web autônomo sem a necessidade de um servidor externo.
+﻿# Arquitetura do Sistema
+
+O **QuestGen IA** foi projetado com uma arquitetura cliente-servidor, inteiramente contida no ecossistema do **Google Apps Script (GAS)**. Isso permite que ele funcione como um aplicativo web autônomo (SPA - *Single Page Application*), sem custos de infraestrutura ou necessidade de servidores externos.
+
+---
 
 ## Estrutura de Arquivos
-O projeto é organizado em uma estrutura de pastas que separa a lógica do back-end, os arquivos de front-end e os arquivos de configuração.
 
-
+```
 /
-├── src/                      # Código do lado do servidor (Back-end)
-│   ├── ScriptServices.js     # Orquestrador principal, doGet, e lógica de geração
-│   ├── authenticateServices.js # Funções de login e validação de token
-│   ├── configServices.js     # Gerencia a criação e leitura dos bancos de dados
-│   ├── questionServices.js   # Lógica para editar, excluir e buscar questões
-│   ├── exportFiles.js        # Lógica para exportar para Moodle e Google Docs
-│   ├── apiServices.js        # Funções para chamar a API do Gemini
-│   ├── constants.js          # Constantes globais (nomes de abas, cabeçalhos)
-│   └── setupUserKeys.js      # Script de configuração inicial dos usuários
+├── src/                          # Código do lado do servidor (Back-end GAS)
+│   ├── geminiServices.js         # Módulo central de IA (modelos, fallback, multimodal e JSON Schema)
+│   ├── ScriptServices.js         # Orquestrador principal, doGet, leitura de Docs/PDFs
+│   ├── questionServices.js       # CRUD de questões, dashboard e LockService
+│   ├── configServices.js         # Gerencia a criação e leitura dos bancos de dados
+│   ├── exportFiles.js            # Exportação para Moodle (XML/GIFT) e Google Docs
+│   ├── authenticateServices.js   # Autenticação e validação de tokens de sessão
+│   ├── apiServices.js            # Ponte de compatibilidade retroativa para IA
+│   ├── constants.js              # Constantes globais (nomes de abas, cabeçalhos)
+│   └── setupUserKeys.js          # Script de configuração inicial das credenciais
 │
-├── html/                     # Arquivos do lado do cliente (Front-end)
-│   └── index.html            # Estrutura principal da aplicação
+├── html/                         # Interface do lado do cliente (Front-end)
+│   └── index.html                # Estrutura principal da SPA e modais
 │
 ├── assets/
 │   ├── css/
-│   │   └── stylesheet.css    # Estilos personalizados da aplicação
+│   │   └── stylesheet.css        # Estilos personalizados (Dark/Light mode, layout)
 │   └── js/
-│       └── application.js    # Lógica de front-end, manipulação do DOM
+│       └── application.js        # Lógica de front-end, DOM e chamadas assíncronas
 │
 └── data/
-    └── appsscript.json       # Manifesto do projeto, escopos e dependências
+    └── appsscript.json           # Manifesto oficial, escopos mínimos e dependências
+```
 
+---
 
 ## Componentes Principais
+
 ### Back-end (Lado do Servidor)
-**Execução:** Os arquivos da pasta /src contém a infraestrutura de back-end da aplicação. Ao criar os arquivos do editor do App Script, utiliza a opção `Script` correspondendo a extensão `.gs` e executado nos servidores do Google.
 
-**Comunicação:** O front-end se comunica com o back-end através da API assíncrona google.script.run.
-
-**ScriptServices.js:** Atua como o ponto de entrada principal (doGet) para servir a interface do usuário. Ele também contém a lógica de orquestração para o processo de geração de questões, chamando outros serviços conforme necessário.
-
-**Serviços Modulares:** A lógica é dividida em serviços com responsabilidades únicas (autenticação, configuração, exportação), tornando o código mais limpo e fácil de manter.
-
-**Segurança:** A segurança é garantida pela validação de um token de sessão em todas as funções que manipulam dados.
+* **Execução:** O código em `/src` é executado nos servidores do Google pelo Runtime V8 do Apps Script, integrado com as APIs nativas do Google Drive, Google Sheets, Google Docs e `UrlFetchApp`.
+* **Módulo Central de IA (`geminiServices.js`):**
+  * **Multimodalidade:** Lê tanto arquivos nativos do **Google Docs** quanto arquivos **PDF** armazenados no Google Drive (enviados em base64 como `inlineData`).
+  * **Cadeia de Fallback Automática:** Tenta em sequência:
+    1. `gemini-3.8-flash` (alta velocidade)
+    2. `gemini-3.5-flash` (eficiência energética/latência)
+    3. `gemini-2.5-pro` (raciocínio complexo)
+    4. `gemini-2.5-flash` (alta estabilidade)
+    5. `gemini-1.5-flash` (disponibilidade garantida)
+  * **Structured Outputs:** Utiliza `responseMimeType: "application/json"` com `responseSchema` rigoroso, eliminando falhas de parsing por regex.
+* **Segurança Concorrente:** Operações críticas de escrita e exclusão nas planilhas utilizam `LockService.getScriptLock()` para evitar condições de corrida (*race conditions*).
 
 ### Front-end (Lado do Cliente)
-**Renderização:** O HTML é renderizado no navegador do usuário. O index.html serve como um aplicativo de página única (SPA - Single Page Application).
 
-**application.js:** Este arquivo gerencia toda a interatividade:
+* **SPA Responsiva:** O `index.html` contém as visualizações dinâmicas (Boas-vindas/Dashboard, Gerador de Questões, Modais de Gestão).
+* **Gestão de Sessão e Configurações:** `sessionToken`, `questGenTheme` (Dark/Light) e `questGenActiveConfigId` são gerenciados via JavaScript nativo e `localStorage`.
+* **Comunicação Assíncrona:** Toda a troca de dados com o back-end ocorre através do canal nativo assíncrono `google.script.run` com `withSuccessHandler` e `withFailureHandler`.
 
-- Manipulação de eventos (cliques em botões, submissão de formulários).
+---
 
-- Comunicação com o back-end usando google.script.run.
+## Fluxo de Execução e Dados
 
-- Manipulação do DOM para exibir e ocultar "views", preencher modais e mostrar feedback ao usuário.
-
-**Estilização:** O stylesheet.css, junto com o framework Bootstrap 5, é responsável por toda a aparência visual da aplicação.
-
-### Fluxo de Dados
-**Carregamento:** O usuário acessa a URL do app. O doGet no ScriptServices.js é acionado.
-
-**Renderização:** O doGet serve o index.html, que por sua vez inclui o stylesheet.css e o application.js.
-
-**Login:** O usuário insere suas credenciais. O application.js envia os dados para a função authenticate no back-end.
-
-**Sessão:** Se as credenciais estiverem corretas, o back-end gera um token, o armazena no CacheService e o retorna ao cliente. O application.js armazena este token em uma variável.
-
-**Ações do Usuário:** Para qualquer ação subsequente (ex: criar um banco, gerar questões), o application.js chama a função correspondente no back-end, enviando sempre o token de sessão como primeiro argumento.
-
-**Validação:** O back-end valida o token usando isTokenValid antes de executar a lógica da função.
-
-**Resposta:** O back-end processa a requisição (ex: lê uma planilha, chama a API do Gemini) e retorna um objeto de resultado para o cliente, que então atualiza a interface.
+```
+[ Usuário submete ID do Doc/PDF e Disciplina ]
+                    │
+                    ▼
+          [ application.js ]
+                    │  google.script.run.processDocumentAndGenerateQuestions
+                    ▼
+          [ ScriptServices.js ]
+                    │
+                    ├──► DriveApp: detecta MIME e extrai Conteúdo (Texto ou Blob PDF)
+                    │
+                    ▼
+          [ geminiServices.js ]
+                    │
+                    ├──► Tenta modelo primário (ex: 3.8-flash) com schema JSON estrito
+                    ├──► Se 404/429/500/503: aciona fallback para 3.5-flash ➔ 2.5-pro ➔ 2.5-flash ➔ 1.5-flash
+                    ├──► Valida e normaliza o JSON retornado
+                    │
+                    ▼
+          [ ScriptServices.js ]
+                    │
+                    ├──► LockService: adquire bloqueio transacional
+                    ├──► SpreadsheetApp: grava questões em 'db_questoes'
+                    └──► Grava log de execução em 'data_logs'
+                    │
+                    ▼
+          [ Retorno de Sucesso para application.js ]
+                    │
+                    ▼
+          [ Atualização da Interface / Dashboard ]
+```

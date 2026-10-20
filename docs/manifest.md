@@ -1,34 +1,41 @@
-# **Manifesto de Arquivos do Projeto**
+﻿# **Manifesto de Arquivos do Projeto**
 
 Este documento serve como um índice e uma breve descrição de todos os arquivos que compõem a aplicação **QuestGen IA**.
 
+---
+
 ## **data/**
 
-* **appsscript.json**: O manifesto oficial do projeto Google Apps Script. Define metadados essenciais, escopos de autorização da API do Google, dependências de serviços avançados e configurações do aplicativo web.
+* **appsscript.json**: O manifesto oficial do projeto Google Apps Script. Define metadados, fuso horário, serviços avançados habilitados e escopos mínimos restritos de autorização OAuth.
 
-## **src/ (Código do Lado do Servidor \- Back-end)**
+---
 
-Contém toda a lógica de negócios que é executada nos servidores do Google.
+## **src/ (Código do Lado do Servidor - Back-end)**
 
-* **ScriptServices.js**: O ponto de entrada principal da aplicação. Contém a função doGet que serve a interface do usuário e orquestra a lógica principal de geração de questões, chamando outros serviços.  
-* **authenticateServices.js**: Gerencia a autenticação de usuários e a validação de tokens de sessão.  
-* **configServices.js**: Lida com a criação, leitura e gerenciamento da planilha de configurações e dos bancos de dados individuais.  
-* **questionServices.js**: Contém as funções para operações CRUD (Criar, Ler, Atualizar, Excluir) em questões individuais e para buscar estatísticas do dashboard.  
-* **exportFiles.js**: Contém a lógica para converter e exportar os bancos de questões para formatos externos (Moodle GIFT, Moodle XML, Google Docs).  
-* **apiServices.js**: Responsável por toda a comunicação com a API externa do Google Gemini, incluindo a construção do prompt e o tratamento da resposta.  
-* **constants.js**: Um arquivo central para definir constantes globais, como nomes de abas e cabeçalhos de planilhas, garantindo consistência em todo o projeto.  
-* **setupUserKeys.js**: Um script de configuração manual para definir as credenciais de acesso dos usuários nas propriedades do script.
+Contém toda a lógica de negócios que é executada no Runtime V8 dos servidores do Google.
 
-## **html/ (Interface do Usuário \- Estrutura)**
+* **geminiServices.js**: Módulo central de IA do projeto. Gerencia a autenticação com a API do Gemini, o suporte multimodal (leitura de PDFs e textos), a cadeia hierárquica de fallback de modelos (`gemini-3.8-flash` ➔ `gemini-3.5-flash` ➔ `gemini-2.5-pro` ➔ `gemini-2.5-flash` ➔ `gemini-1.5-flash`) e a estruturação de saídas em JSON nativo (*schema enforcement*).
+* **ScriptServices.js**: O ponto de entrada principal (`doGet`) que serve a interface SPA. Orquestra a leitura de arquivos no Google Drive (Google Docs, PDFs, textos), coordena as chamadas à IA e gerencia as gravações nas planilhas.
+* **questionServices.js**: Responsável pelas operações CRUD das questões individuais, agregações estatísticas do Dashboard (`getDashboardStats`) e controle de concorrência com `LockService`.
+* **configServices.js**: Gerencia a Pasta Raiz no Drive, a planilha mestra de configurações e o ciclo de vida dos bancos de dados satélites.
+* **exportFiles.js**: Converte e exporta os bancos de questões para formatos externos (Moodle XML, Moodle GIFT e Google Docs).
+* **authenticateServices.js**: Autentica os usuários e emite/valida tokens de sessão.
+* **apiServices.js**: Ponte mantida para compatibilidade retroativa, delegando chamadas para `geminiServices.js`.
+* **constants.js**: Centralizador de constantes globais (nomes de abas, cabeçalhos padronizados).
+* **setupUserKeys.js**: Script executado pelo desenvolvedor/administrador para gravar os usuários e senhas nas Propriedades do Script.
 
-* **index.html**: O único arquivo HTML do projeto. Ele define a estrutura de toda a interface do usuário, incluindo a tela de login, o layout principal, a sidebar e todos os modais. Atua como um aplicativo de página única (SPA).
+---
+
+## **html/ (Interface do Usuário - Estrutura)**
+
+* **index.html**: Estrutura principal da SPA (Single Page Application), contendo a tela de login, o layout principal, a sidebar responsiva, os formulários de geração e todos os modais interativos.
+
+---
 
 ## **assets/ (Recursos do Front-end)**
 
 #### **css/**
-
-* **stylesheet.css**: A folha de estilos personalizada da aplicação. Contém todas as regras de CSS para estilizar a interface, incluindo o design da tela de login, o layout, a sidebar recolhível e os temas claro/escuro.
+* **stylesheet.css**: Folha de estilos da aplicação, contendo o design visual, layouts flexíveis, modais, alertas e variáveis para os temas claro (*light*) e escuro (*dark*).
 
 #### **js/**
-
-* **application.js**: O coração da lógica do lado do cliente. Este arquivo gerencia todas as interações do usuário, manipulação do DOM, chamadas assíncronas para o back-end (google.script.run), e a lógica de troca de temas.
+* **application.js**: Controlador client-side da aplicação. Gerencia eventos do DOM, chamadas assíncronas via `google.script.run`, transição entre visualizações, download de arquivos e alternância de temas.
