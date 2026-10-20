@@ -1,4 +1,4 @@
-﻿# **Manifesto de Arquivos do Projeto**
+# **Manifesto de Arquivos do Projeto**
 
 Este documento serve como um índice e uma breve descrição de todos os arquivos que compõem a aplicação **QuestGen IA**.
 
@@ -14,6 +14,7 @@ Este documento serve como um índice e uma breve descrição de todos os arquivo
 
 Contém toda a lógica de negócios que é executada no Runtime V8 dos servidores do Google.
 
+* **setupInstaller.js**: Script instalador e configurador automático. Cria a Pasta Raiz, Planilha Mestra, subpastas padronizadas, banco inicial e propriedades do sistema com 1 clique no editor do Apps Script.
 * **geminiServices.js**: Módulo central de IA do projeto. Gerencia a autenticação com a API do Gemini, o suporte multimodal (leitura de PDFs e textos), a cadeia hierárquica de fallback de modelos (`gemini-3.8-flash` ➔ `gemini-3.5-flash` ➔ `gemini-2.5-pro` ➔ `gemini-2.5-flash` ➔ `gemini-1.5-flash`) e a estruturação de saídas em JSON nativo (*schema enforcement*).
 * **ScriptServices.js**: O ponto de entrada principal (`doGet`) que serve a interface SPA. Orquestra a leitura de arquivos no Google Drive (Google Docs, PDFs, textos), coordena as chamadas à IA e gerencia as gravações nas planilhas.
 * **questionServices.js**: Responsável pelas operações CRUD das questões individuais, agregações estatísticas do Dashboard (`getDashboardStats`) e controle de concorrência com `LockService`.
